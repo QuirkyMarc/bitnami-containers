@@ -4,6 +4,7 @@
 FROM docker.io/bitnami/minideb:bullseye
 
 ARG ELASTICSEARCH_PLUGINS
+ARG USE_JAVA_HOME="/opt/bitnami/java"
 ARG JAVA_EXTRA_SECURITY_DIR="/bitnami/java/extra-security"
 ARG TARGETARCH
 
@@ -21,7 +22,7 @@ ENV HOME="/" \
     OS_ARCH="${TARGETARCH:-amd64}" \
     OS_FLAVOUR="debian-11" \
     OS_NAME="linux" \
-    PATH="/opt/bitnami/common/bin:/opt/bitnami/java/bin:/opt/bitnami/elasticsearch/bin:$PATH"
+    PATH="/opt/bitnami/common/bin:$USE_JAVA_HOME/bin:/opt/bitnami/elasticsearch/bin:$PATH"
 
 COPY prebuildfs /
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -51,8 +52,8 @@ RUN /opt/bitnami/scripts/elasticsearch/postunpack.sh
 RUN /opt/bitnami/scripts/java/postunpack.sh
 ENV APP_VERSION="8.9.0" \
     BITNAMI_APP_NAME="elasticsearch" \
-    ES_JAVA_HOME="/opt/bitnami/java" \
-    JAVA_HOME="/opt/bitnami/java" \
+    ES_JAVA_HOME="$USE_JAVA_HOME" \
+    JAVA_HOME="$USE_JAVA_HOME" \
     LD_LIBRARY_PATH="/opt/bitnami/elasticsearch/jdk/lib:/opt/bitnami/elasticsearch/jdk/lib/server:$LD_LIBRARY_PATH"
 
 EXPOSE 9200 9300
